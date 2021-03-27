@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+    gnuradio:
+        build: .
+        environment:
+            DISPLAY: ${HOSTNAME}:0
+        volumes:
+            - gr_prefix:/root/gr_prefix/
+            - ./gnuradio/:/root/gr_prefix/src/gnuradio/
+            - gr_build:/root/gr_prefix/src/gnuradio/build/
+        tty: true
+
+volumes:
+  gr_prefix:
+  gr_build:

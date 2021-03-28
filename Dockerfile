@@ -35,12 +35,14 @@ RUN mkdir src/ && cd src/ && \
 	cmake -DCMAKE_BUILD_TYPE=Release -DPYTHON_EXECUTABLE=/usr/bin/python3 ../ \
 	&& make && make test && make install
 
-# Configure the env vars required to run GR
+# Configure the paths required to run GR
 ENV GR_PREFIX=/root/gr_prefix
 WORKDIR $GR_PREFIX
+RUN PYSITEDIR=$(python3 -m site --user-site) && \
+	mkdir -p "$PYSITEDIR" && \
+	echo "$GR_PREFIX/lib/python3/dist-packages/" > "$PYSITEDIR/gnuradio.pth"
+RUN echo "$GR_PREFIX/lib/" >> /etc/ld.so.conf.d/gnuradio.conf
 RUN echo "export PATH=$GR_PREFIX/bin/:${PATH}" >> /root/.bashrc
-RUN echo "export LD_LIBRARY_PATH=$GR_PREFIX/lib/:${LD_LIBRARY_PATH}" >> /root/.bashrc
-RUN echo "export PYTHONPATH=$GR_PREFIX/lib/python3/dist-packages/:${PYTHONPATH}" >> /root/.bashrc
 
 # Change the entrypoint to run ldconfig on startup
 ADD entrypoint.sh /bin/entrypoint

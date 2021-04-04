@@ -12,16 +12,56 @@ First of all, clone GR on the root directory of this project:
 git clone https://github.com/gnuradio/gnuradio.git
 ```
 
+## GUI Configuration
+
 Next, prepare to run GUI applications inside the container (e.g., to run
 `gnuradio-companion`). Note there will be no X Server running in the
 container. Hence, the container will need to use the host's X Server.
 
 For example, on macOS, you can use the XQuartz application on the host to
-display GUI applications running inside the container. It is only necessary to
-define the `DISPLAY` env var on the running container such that it points to the
-host's X server. This is done automatically by the docker-compose recipe (see
-`docker-compose.yml`), as long the `HOSTNAME` variable is defined before
-launching the container, as follows:
+display GUI applications running inside the container. To do so, first, you need
+to define the `DISPLAY` env var on the running container such that it points to
+the host's X server. You can test whether this works by running the `xeyes`
+image, as follows:
+
+```
+docker run -e DISPLAY=`hostname`:0 gns3/xeyes
+```
+
+At this point, you will likely see `Error: Can't open display`. That's because
+you still need to authorize the container to access the host's X server. To do
+so, check the source IP address of the X11 packets coming from the
+container. Open a terminal window and run:
+
+```
+sudo tcpdump -i any port 6000
+```
+
+Then, on another window, run the `xeyes` container and observe the packets on
+tcpdump. You should see packets coming from an IP address in the same subnet of
+the Docker bridge network.
+
+For example, let's say the source IP address is `192.168.64.2`. Then, you can
+authorize this IP address to access the X server by running:
+
+```
+xhost + 192.168.64.2
+```
+
+Now, rerun `xeyes`. It should open the GUI successfully.
+
+> If the GUI still fails, make sure that:
+>
+> 1. XQuartz (on macOS) is configured to allow connections from network clients
+>    (at `Preferences > Security`).
+>
+> 2. The container can ping the host via the host's hostname. This works on
+>    Docker Mac but may not work in other environments.
+
+## Launching
+
+Before launching the GR development environment, define the `HOSTNAME` variable
+as follows:
 
 ```
 export HOSTNAME=`hostname`
@@ -83,14 +123,3 @@ launching `gnuradio-companion`:
 ```
 gnuradio-companion
 ```
-
-> If the application fails to connect to the host's X Server, make sure that:
->
-> 1. XQuartz (on macOS) is configured to allow connections from network clients
->    (check `Preferences > Security`).
->
-> 2. The container can ping the host via the host's hostname. This works on
->    Docker Mac but may not work in other environments.
->
-> 3. Check if you need to authorize the container somehow to access the host's X
->    server (using `xauth` or `xhost`).

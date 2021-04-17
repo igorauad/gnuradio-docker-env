@@ -23,7 +23,10 @@ RUN apt update && \
 	python3-pyqtgraph \
 	python3-scipy \
 	python3-yaml \
-	qtbase5-dev
+	qtbase5-dev \
+	clang-format
+
+RUN apt install -y --no-install-recommends libuhd-dev
 
 # Pip dependencies
 RUN pip3 install "pybind11[global]" pygccxml

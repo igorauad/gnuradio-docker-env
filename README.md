@@ -142,3 +142,33 @@ launching `gnuradio-companion`:
 ```
 gnuradio-companion
 ```
+
+## OOT Development
+
+If you would like to develop an out-of-tree (OOT) GR module using the same
+environment, you can do so by proceeding with the following steps:
+
+1. Clone your OOT module in the root directory of this project, just like how
+   `gnuradio` was cloned.
+2. Modify the `Dockerfile` container image recipe such that it installs the
+   dependencies required for your OOT module.
+3. Add the appropriate volumes on `docker-compose.yml`. For example, if you are
+   developing an OOT module named `gr-oot`, add the following to
+   `services:gnuradio:volumes` and `volumes`:
+
+```
+services:
+    gnuradio:
+        ...
+        volumes:
+            ...
+            - ./gr-oot/:/root/gr_prefix/src/gr-oot/
+            - gr_oot_build:/root/gr_prefix/src/gr-oot/build/
+
+volumes:
+  ...
+  gr_oot_build
+```
+
+4. Build and install the OOT module from the build directory at
+   `src/gr-oot/build/` inside the container.

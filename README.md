@@ -119,11 +119,14 @@ cmake \
 	-DENABLE_GR_WAVELET=OFF \
 	-DENABLE_GR_ZEROMQ=OFF \
 	../
-make
+make -j`nproc`
 make test
 make install
 ldconfig
 ```
+
+> Note: you may need to adjust the Docker resources. On macOS, access `Docker
+> Desktop > Preferences > Resources`.
 
 The given steps will install GR on the `gr_prefix` named volume mentioned
 earlier. Hence, the installation will persist across container sessions. That

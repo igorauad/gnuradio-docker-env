@@ -8,8 +8,11 @@ services:
             - gr_prefix:/root/gr_prefix/
             - ./gnuradio/:/root/gr_prefix/src/gnuradio/
             - gr_build:/root/gr_prefix/src/gnuradio/build/
+            - ../gr-dvbs2rx/:/root/gr_prefix/src/gr-dvbs2rx/
+            - gr_dvbs2rx_build:/root/gr_prefix/src/gr-dvbs2rx/build/
         tty: true
 
 volumes:
   gr_prefix:
   gr_build:
+  gr_dvbs2rx_build:

@@ -2,8 +2,8 @@
 
 This repository contains a quick and easy setup for GNU Radio (GR) development
 on a reproducible Docker-based environment. The configuration was tested on
-macOS Big Sur with Docker Desktop (M1 build) v3.3.0. However, it can easily be
-adapted to other platforms.
+macOS Big Sur with Docker Desktop v3.4.0 on Apple Silicon (M1). However, it can
+easily be adapted to other platforms.
 
 The goal in this setup is to separate the roles of the host and the Docker
 container. You will edit the GR sources directly from the host on your editor of
@@ -37,22 +37,19 @@ docker run -e DISPLAY=host.docker.internal:0 gns3/xeyes
 
 At this point, you will likely see `Error: Can't open display`. That's because
 you still need to authorize the container to access the host's X server. To do
-so, check the source IP address of the X11 packets coming from the
-container. Open a terminal window and run:
+so, check the source address of the X11 packets coming from the container. Open
+a terminal window and run:
 
 ```
 sudo tcpdump -i any port 6000
 ```
 
 Then, on another window, run the `xeyes` container and observe the packets on
-tcpdump. You should see packets coming from an IP address in the same subnet of
-the Docker bridge network.
-
-For example, let's say the source IP address is `192.168.64.2`. Then, you can
-authorize this IP address to access the X server by running:
+tcpdump. You should see packets coming from `localhost`. In that case, you need
+to authorize `localhost` to access the X server by running:
 
 ```
-xhost + 192.168.64.2
+xhost + localhost
 ```
 
 > Note: `xhost` provides a simple way to grant access to your host's X

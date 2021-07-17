@@ -3,9 +3,11 @@ FROM ubuntu:focal
 # Utilities and libraries
 RUN apt update && \
 	DEBIAN_FRONTEND="noninteractive" apt install -y \
+	clang-format \
 	cmake \
 	doxygen \
 	g++ \
+	gdb \
 	gir1.2-gtk-3.0 \
 	git \
 	libboost-all-dev \
@@ -13,6 +15,7 @@ RUN apt update && \
 	libgmp3-dev \
 	liblog4cpp5-dev \
 	libqwt-qt5-dev \
+	pkg-config \
 	python3-click-plugins \
 	python3-distutils \
 	python3-gi-cairo \
@@ -23,8 +26,7 @@ RUN apt update && \
 	python3-pyqtgraph \
 	python3-scipy \
 	python3-yaml \
-	qtbase5-dev \
-	clang-format
+	qtbase5-dev
 
 RUN apt install -y --no-install-recommends libuhd-dev
 
@@ -34,7 +36,10 @@ RUN apt install -y software-properties-common && \
 	apt install -y tsduck
 
 # Python dependencies and tools
-RUN pip3 install "pybind11[global]" pygccxml
+RUN pip3 install \
+	"pybind11[global]" \
+	cmakelang \
+	pygccxml
 
 # Volk
 RUN mkdir src/ && cd src/ && \

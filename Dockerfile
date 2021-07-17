@@ -28,7 +28,12 @@ RUN apt update && \
 
 RUN apt install -y --no-install-recommends libuhd-dev
 
-# Pip dependencies
+# Useful for gr-dvbs2rx development
+RUN apt install -y software-properties-common && \
+	add-apt-repository -y ppa:blockstream/satellite && \
+	apt install -y tsduck
+
+# Python dependencies and tools
 RUN pip3 install "pybind11[global]" pygccxml
 
 # Volk

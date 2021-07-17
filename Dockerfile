@@ -59,6 +59,7 @@ RUN echo "export PATH=$GR_PREFIX/bin/:${PATH}" >> /root/.bashrc
 
 # Change the entrypoint to run ldconfig on startup
 ADD entrypoint.sh /bin/entrypoint
+ADD install*.sh /etc/util/
 RUN chmod +x /bin/entrypoint
 ENTRYPOINT ["/bin/entrypoint"]
 CMD ["/bin/bash"]
